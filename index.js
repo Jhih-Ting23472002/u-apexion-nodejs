@@ -68,7 +68,7 @@ app.get('/', async (req, res)=>{
 });
 
 //訂票行程選擇頁
-app.use('/ticket-trip-api',require('./routes/ticket-trip'))
+app.use('/ticket-trip',require('./routes/ticket-trip'))
 
 
 // ********** 所有路由的後面
