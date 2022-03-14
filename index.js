@@ -62,14 +62,17 @@ app.use((req, res, next)=>{
 
 
 app.get('/', async (req, res)=>{
-    const sql = `SELECT * FROM product`;
-    const [rs] = await db.query(sql);
-    res.json(rs);
+    // const sql = `SELECT * FROM product`;
+    // const [rs] = await db.query(sql);
+    res.json('123');
 });
+
+//訂票行程選擇頁
+app.use('/ticket-trip-api',require('./routes/ticket-trip'))
 
 
 // ********** 所有路由的後面
-app.use( (req, res)=>{
+app.use( (req,res)=>{
     res.status(404).send(`<h2>走錯路了</h2>`);
 });
 
