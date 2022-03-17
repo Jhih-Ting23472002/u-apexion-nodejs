@@ -65,8 +65,7 @@ app.use((req, res, next)=>{
 app.use('/ticket-trip',require('./routes/ticket-trip'))
 
 //周邊商品頁
-
-app.use('/product',require('./routes/productNew'))
+app.use('/product',require('./routes/product'))
 
 
 // ********** 所有路由的後面
