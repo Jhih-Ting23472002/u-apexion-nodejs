@@ -61,14 +61,12 @@ app.use((req, res, next)=>{
 });
 
 
-app.get('/', async (req, res)=>{
-    // const sql = `SELECT * FROM product`;
-    // const [rs] = await db.query(sql);
-    res.json('123');
-});
-
 //訂票行程選擇頁
 app.use('/ticket-trip',require('./routes/ticket-trip'))
+
+//周邊商品頁
+
+app.use('/product',require('./routes/productNew'))
 
 
 // ********** 所有路由的後面
