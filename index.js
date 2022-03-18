@@ -70,6 +70,10 @@ app.use('/ticket-date',require('./routes/ticket-date'))
 //周邊商品頁
 app.use('/product',require('./routes/product'))
 
+//行程首頁
+app.use('/travel-index',require('./routes/travel-index'))
+
+
 
 // ********** 所有路由的後面
 app.use( (req,res)=>{
