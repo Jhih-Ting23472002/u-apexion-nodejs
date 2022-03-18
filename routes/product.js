@@ -14,13 +14,13 @@ async function getProductMen(req, res) {
 }
 async function getProductWoman(req, res) {
   const sql = `SELECT * FROM product WHERE category = 'Woman' ORDER BY RAND() LIMIT 4`;
-  const [rs2] = await db.query(sql);
-  return rs2;
+  const [rs3] = await db.query(sql);
+  return rs3;
 }
 async function getProductShoes(req, res) {
   const sql = `SELECT * FROM product WHERE category = 'Shoes' ORDER BY RAND() LIMIT 4`;
-  const [rs2] = await db.query(sql);
-  return rs2;
+  const [rs4] = await db.query(sql);
+  return rs4;
 }
 
 router.get("/api/getProduct-New", async (req, res) => {
