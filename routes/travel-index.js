@@ -3,7 +3,7 @@ const db = require('../modules/connect-db');
 const router = express.Router();
 
 async function getTravelindex(req,res){
-    const sql = `SELECT * FROM travel_index WHERE travel_price = "199999"`;
+    const sql = `SELECT * FROM travel_index WHERE travel_hot = 'v'`;
     const [rs1] = await db.query(sql)
     return rs1;
 }
