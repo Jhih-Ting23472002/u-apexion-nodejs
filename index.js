@@ -76,6 +76,9 @@ app.use('/travel-index',require('./routes/travel-index'))
 //全行程選擇頁
 app.use('/travel-choose',require('./routes/travel-choose'))
 
+//行程詳細頁
+app.use('/travel-notes',require('./routes/travel-notes'))
+
 
 
 // ********** 所有路由的後面
