@@ -7,6 +7,7 @@ async function getProductNew(req, res) {
   const [rs1] = await db.query(sql);
   return rs1;
 }
+//分類推薦
 async function getProductMen(req, res) {
   const sql = `SELECT * FROM product WHERE category = 'Men' ORDER BY RAND() LIMIT 4`;
   const [rs2] = await db.query(sql);
@@ -23,9 +24,28 @@ async function getProductShoes(req, res) {
   return rs4;
 }
 
+//該項分類所有商品
+async function getAllMen(req, res) {
+  const sql = `SELECT * FROM product WHERE category ='Men' `;
+  const [allMen] = await db.query(sql);
+  return allMen;
+}
+async function getAllWoman(req, res) {
+  const sql = `SELECT * FROM product WHERE category ='Woman' `;
+  const [allWoman] = await db.query(sql);
+  return allWoman;
+}
+async function getAllShoes(req, res) {
+  const sql = `SELECT * FROM product WHERE category ='Shoes' `;
+  const [allShoes] = await db.query(sql);
+  return allShoes;
+}
+//--------------------------------------------------------------------------------------
 router.get("/api/getProduct-New", async (req, res) => {
   res.json(await getProductNew(req, res));
 });
+
+//分類推薦
 router.get("/api/getProductMen", async (req, res) => {
   res.json(await getProductMen(req, res));
 });
@@ -34,6 +54,17 @@ router.get("/api/getProductWoman", async (req, res) => {
 });
 router.get("/api/getProductShoes", async (req, res) => {
   res.json(await getProductShoes(req, res));
+});
+
+//該項分類所有商品
+router.get("/api/getAllMen", async (req, res) => {
+  res.json(await getAllMen(req, res));
+});
+router.get("/api/getAllWoman", async (req, res) => {
+  res.json(await getAllWoman(req, res));
+});
+router.get("/api/getAllShoes", async (req, res) => {
+  res.json(await getAllShoes(req, res));
 });
 
 module.exports = router;
