@@ -10,6 +10,7 @@ const multer = require('multer');
 const upload = require(__dirname + '/modules/upload-imgs');
 const fs = require('fs').promises;
 const db = require('./modules/connect-db');
+//新增資料表在Mysql
 const sessionStore = new MysqlStore({}, db);
 const cors = require('cors');
 const fetch = require('node-fetch');
