@@ -4,7 +4,7 @@ const upload = require('./../modules/upload-imgs');
 
 const router = express.Router();
 
-async function getListData(req, res){
+async function getTravelData(req, res){
     const perPage = 5; // 每一頁最多幾筆
     // 用戶要看第幾頁
     let page = (req.query.page && parseInt(req.query.page)) ? parseInt(req.query.page) : 1;
@@ -47,14 +47,14 @@ async function getListData(req, res){
         const sql = `SELECT * FROM \`travel_index\` ${sqlWhere} ORDER BY sid DESC LIMIT ${perPage*(page-1)}, ${perPage} `;
         const [rs2] = await db.query(sql);
         rs2.forEach(el=>{
-            let str = res.locals.toDateString(el.travel_outbound, el.travel_inbound);
-            if(str === 'Invalid date'){
-                el.travel_outbound = '沒有輸入資料';
-                el.travel_inbound = '沒有輸入資料';
-            } else {
-                el.travel_outbound = str;
-                el.travel_inbound = str;
-            }
+            // let str = res.locals.toDateString(el.travel_outbound, el.travel_inbound);
+            // if(str === 'Invalid date'){
+            //     el.travel_outbound = '沒有輸入資料';
+            //     el.travel_inbound = '沒有輸入資料';
+            // } else {
+            //     el.travel_outbound = str;
+            //     el.travel_inbound = str;
+            // }
 
         });
         output.rows = rs2;
@@ -63,14 +63,14 @@ async function getListData(req, res){
     return output;
 }
 
-router.get('/', async (req, res)=>{
-    res.redirect('/travel-choose/list');
-});
-router.get('/list', async (req, res)=>{
-    res.render('travel-choose/list', await getListData(req, res));
-});
+// router.get('/', async (req, res)=>{
+//     res.redirect('/travel-choose/list');
+// });
+// router.get('/list', async (req, res)=>{
+//     res.render('travel-choose/list', await getTravelData(req, res));
+// });
 router.get('/api/list', async (req, res)=>{
-    res.json(await getListData(req, res));
+    res.json(await getTravelData(req, res));
 });
 
 router.get('/add', async (req, res)=>{
@@ -102,8 +102,8 @@ router.post('/add', async (req, res)=>{
         req.body.travel_name,
         req.body.travel_description,
         req.body.travel_tags,
-        req.body.travel_outbound || null,
-        req.body.travel_inbound || null,
+        req.body.travel_outbound,
+        req.body.travel_inbound,
         req.body.travel_day,
         req.body.travel_price,
     ]);
