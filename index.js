@@ -68,6 +68,9 @@ app.use('/ticket-trip',require('./routes/ticket-trip'))
 //訂票日期選擇頁
 app.use('/ticket-date',require('./routes/ticket-date'))
 
+//訂票座位選擇頁
+app.use('/ticket-seat',require('./routes/ticket-seat'))
+
 //周邊商品頁
 app.use('/product',require('./routes/product'))
 
