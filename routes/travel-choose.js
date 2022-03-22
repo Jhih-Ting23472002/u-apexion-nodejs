@@ -16,7 +16,7 @@ async function getTravelData(req, res){
     search = search.trim(); // 去掉頭尾空白
     let sqlWhere = ' WHERE 1 ';
     if(search){
-        sqlWhere += ` AND \`travel_name\` LIKE ${db.escape('%'+search+'%')} `;
+        sqlWhere += ` AND \`travel_search\` LIKE ${db.escape('%'+search+'%')} `;
         conditions.search = search;
     }
 
