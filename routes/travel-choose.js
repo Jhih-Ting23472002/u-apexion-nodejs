@@ -11,13 +11,13 @@ async function getTravelData(req, res){
     if(page<1){
         return res.redirect('/travel-choose');
     }
-    // const conditions = {};  // 傳到 ejs 的條件
+    const conditions = {}; //引用到React
     let search = req.query.search ? req.query.search : '';
     search = search.trim(); // 去掉頭尾空白
     let sqlWhere = ' WHERE 1 ';
     if(search){
         sqlWhere += ` AND \`travel_name\` LIKE ${db.escape('%'+search+'%')} `;
-        // conditions.search = search;
+        conditions.search = search;
     }
 
     // 輸出
@@ -27,11 +27,12 @@ async function getTravelData(req, res){
         page,
         totalRows: 0,
         totalPages: 0,
-        rows: []
-        // conditions
+        rows: [],
+        conditions
     };
 
     const t_sql = `SELECT COUNT(1) num FROM travel_index ${sqlWhere} `;
+    // return t_sql;
     // return res.send(t_sql); // 除錯用
     const [rs1] = await db.query(t_sql);
     const totalRows = rs1[0].num;
@@ -67,10 +68,10 @@ async function getTravelData(req, res){
 router.get('/', async (req, res)=>{
     res.redirect('/travel-choose');
 });
-router.get('/list', async (req, res)=>{
+router.get('/choose-list', async (req, res)=>{
     res.render('travel-choose', await getTravelData(req, res));
 });
-router.get('/api/list', async (req, res)=>{
+router.get('/api/choose-list', async (req, res)=>{
     res.json(await getTravelData(req, res));
 });
 
