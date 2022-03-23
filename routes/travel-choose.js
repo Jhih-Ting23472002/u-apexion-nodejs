@@ -9,14 +9,14 @@ async function getTravelData(req, res){
     // 用戶要看第幾頁
     let page = (req.query.page && parseInt(req.query.page)) ? parseInt(req.query.page) : 1;
     if(page<1){
-        return res.redirect('/z/list');
+        return res.redirect('/travel-choose');
     }
-    const conditions = {};  // 傳到 ejs 的條件
+    const conditions = {}; //引用到React
     let search = req.query.search ? req.query.search : '';
     search = search.trim(); // 去掉頭尾空白
     let sqlWhere = ' WHERE 1 ';
     if(search){
-        sqlWhere += ` AND \`travel_name\` LIKE ${db.escape('%'+search+'%')} `;
+        sqlWhere += ` AND \`travel_search\` LIKE ${db.escape('%'+search+'%')} `;
         conditions.search = search;
     }
 
@@ -32,6 +32,7 @@ async function getTravelData(req, res){
     };
 
     const t_sql = `SELECT COUNT(1) num FROM travel_index ${sqlWhere} `;
+    // return t_sql;
     // return res.send(t_sql); // 除錯用
     const [rs1] = await db.query(t_sql);
     const totalRows = rs1[0].num;
@@ -41,12 +42,14 @@ async function getTravelData(req, res){
         output.totalRows = totalRows;
         if(page > output.totalPages){
             // 到最後一頁
-            return res.redirect(`/travel-choose/list?page=${output.totalPages}`);
+            return res.redirect(`/travel-choose?page=${output.totalPages}`);
         }
 
         const sql = `SELECT * FROM \`travel_index\` ${sqlWhere} ORDER BY sid DESC LIMIT ${perPage*(page-1)}, ${perPage} `;
         const [rs2] = await db.query(sql);
         rs2.forEach(el=>{
+            el.travel_outbound = res.locals.toDateString(el.travel_outbound);
+            el.travel_inbound = res.locals.toDateString(el.travel_inbound);
             // let str = res.locals.toDateString(el.travel_outbound, el.travel_inbound);
             // if(str === 'Invalid date'){
             //     el.travel_outbound = '沒有輸入資料';
@@ -55,7 +58,6 @@ async function getTravelData(req, res){
             //     el.travel_outbound = str;
             //     el.travel_inbound = str;
             // }
-
         });
         output.rows = rs2;
     }
@@ -63,13 +65,13 @@ async function getTravelData(req, res){
     return output;
 }
 
-// router.get('/', async (req, res)=>{
-//     res.redirect('/travel-choose/list');
-// });
-// router.get('/list', async (req, res)=>{
-//     res.render('travel-choose/list', await getTravelData(req, res));
-// });
-router.get('/api/list', async (req, res)=>{
+router.get('/', async (req, res)=>{
+    res.redirect('/travel-choose');
+});
+router.get('/choose-list', async (req, res)=>{
+    res.render('travel-choose', await getTravelData(req, res));
+});
+router.get('/api/choose-list', async (req, res)=>{
     res.json(await getTravelData(req, res));
 });
 
@@ -117,7 +119,7 @@ router.get('/delete/:sid', async (req, res)=>{
     // req.get('Referer') // 從哪裡來
     const sql = "DELETE FROM travel_index WHERE sid=?";
     const [result] = await db.query(sql, [req.params.sid]);
-    res.redirect('/travel-choose/list');
+    res.redirect('/travel-choose');
 });
 
 router.get('/edit/:sid', async (req, res)=>{
@@ -125,7 +127,7 @@ router.get('/edit/:sid', async (req, res)=>{
     const [rs] = await db.query(sql, [req.params.sid]);
 
     if(! rs.length){
-        return res.redirect('/travel-choose/list');
+        return res.redirect('/travel-choose');
     }
 
     res.render('travel-choose/edit', rs[0]);
