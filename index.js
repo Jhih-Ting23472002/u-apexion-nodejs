@@ -10,6 +10,7 @@ const multer = require('multer');
 const upload = require(__dirname + '/modules/upload-imgs');
 const fs = require('fs').promises;
 const db = require('./modules/connect-db');
+//新增資料表在Mysql
 const sessionStore = new MysqlStore({}, db);
 const cors = require('cors');
 const fetch = require('node-fetch');
@@ -66,6 +67,9 @@ app.use('/ticket-trip',require('./routes/ticket-trip'))
 
 //訂票日期選擇頁
 app.use('/ticket-date',require('./routes/ticket-date'))
+
+//訂票座位選擇頁
+app.use('/ticket-seat',require('./routes/ticket-seat'))
 
 //周邊商品頁
 app.use('/product',require('./routes/product'))

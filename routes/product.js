@@ -7,6 +7,11 @@ async function getProductNew(req, res) {
   const [rs1] = await db.query(sql);
   return rs1;
 }
+async function getProduct(req, res) {
+  const sql = `SELECT * FROM product`;
+  const [rs5] = await db.query(sql);
+  return rs5;
+}
 //分類推薦
 async function getProductMen(req, res) {
   const sql = `SELECT * FROM product WHERE category = 'Men' ORDER BY RAND() LIMIT 4`;
@@ -28,21 +33,39 @@ async function getProductShoes(req, res) {
 async function getAllMen(req, res) {
   const sql = `SELECT * FROM product WHERE category ='Men' `;
   const [allMen] = await db.query(sql);
-  return allMen;
+
+  const totalRows = `SELECT COUNT(1) FROM product WHERE category ='Men' `;
+  const [allMentotalRows] = await db.query(totalRows);
+  const allRows = allMentotalRows[0];
+  const output = {allMen, allRows };
+  return output;
 }
 async function getAllWoman(req, res) {
   const sql = `SELECT * FROM product WHERE category ='Woman' `;
   const [allWoman] = await db.query(sql);
-  return allWoman;
+
+  const totalRows = `SELECT COUNT(1) FROM product WHERE category ='Woman' `;
+  const [allMentotalRows] = await db.query(totalRows);
+  const allRows = allMentotalRows[0];
+  const output = {allWoman, allRows };
+  return output;
 }
 async function getAllShoes(req, res) {
   const sql = `SELECT * FROM product WHERE category ='Shoes' `;
   const [allShoes] = await db.query(sql);
-  return allShoes;
+
+  const totalRows = `SELECT COUNT(1) FROM product WHERE category ='Shoes' `;
+  const [allMentotalRows] = await db.query(totalRows);
+  const allRows = allMentotalRows[0];
+  const output = {allShoes, allRows };
+  return output;
 }
 //--------------------------------------------------------------------------------------
 router.get("/api/getProduct-New", async (req, res) => {
   res.json(await getProductNew(req, res));
+});
+router.get("/api/getProduct", async (req, res) => {
+  res.json(await getProduct(req, res));
 });
 
 //分類推薦
