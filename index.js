@@ -83,6 +83,9 @@ app.use('/travel-choose',require('./routes/travel-choose'))
 //行程詳細頁
 app.use('/travel-notes',require('./routes/travel-notes'))
 
+//會員頁
+app.use('/user',require('./routes/user'))
+
 
 
 // ********** 所有路由的後面
