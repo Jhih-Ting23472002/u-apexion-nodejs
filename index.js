@@ -79,7 +79,8 @@ app.use('/travel-index',require('./routes/travel-index'))
 
 //全行程選擇頁
 app.use('/travel-choose',require('./routes/travel-choose'))
-app.use('/travel-choose-mf',require('./routes/travel-choose-mf'))
+app.use('/travel-choose-pmf',require('./routes/travel-choose-pmf'))
+app.use('/travel-choose-dmf',require('./routes/travel-choose-dmf'))
 
 //行程詳細頁
 app.use('/travel-notes',require('./routes/travel-notes'))
