@@ -106,19 +106,19 @@ router.post("/api/accountAndMobileCheck", async (req, res) => {
         html: `
         <p>修改您的密碼!</p>
         <p>您正在修改 U-APEXION 宇頂科技 的會員密碼</p> 
-        <p>請您輸入以下驗證碼: <strong style="color: #841d29;">${verify_code}</strong></p>`,
+        <p>請您輸入以下驗證碼: <strong style="color: #841d29;">${verify_code}</strong></p>
+        <p>***此驗證碼五分鐘內有效***</p>`,
       })
       .then((info) => {
         console.log({ info });
       })
       .catch(console.error);
 
-    //output.success = true;
-    //output.verify_code = verify_code;
+    output.success = true;
+    output.verify_code = verify_code;
     
-    //res.json(output);
 
-    output.error  = "驗證成功，請您至信箱收取驗證碼。";
+    output.message  = "驗證成功，請您至信箱收取驗證碼。";
     output.code   = 200;
     
     return res.json(output); 
@@ -126,7 +126,7 @@ router.post("/api/accountAndMobileCheck", async (req, res) => {
 
 });
 
-//忘記密碼頁驗證碼認證
+//忘記密碼-驗證碼認證
 router.post("/api/revise-pwd-vcode", async (req, res) => {
   const output = {
     success: false,
@@ -143,20 +143,23 @@ router.post("/api/revise-pwd-vcode", async (req, res) => {
   res.json(output);
 });
 
-//忘記密碼頁修改密碼
+//忘記密碼-更改密碼
 router.post("/api/reset-pwd", async (req, res) => {
   const output = {
     success: false,
     errorMessage: "",
   };
   const hash = await bcrypt.hash(req.body.newPassword, saltRounds);
-  const sql = "UPDATE `mem` SET `mem_pwd`=? WHERE mem_id=?";
+  const sql = "UPDATE `user` SET `password`=? WHERE sid=?";
 
-  const [result] = await db.query(sql, [hash, req.body.mem_id]);
+  const [result] = await db.query(sql, [hash, req.body.forgotsid]);
 
   console.log(result);
   output.success = !!result.affectedRows;
   output.result = result;
+  if(output.success === false) {
+    output.errorMessage="更改密碼失敗"
+  }
   res.json(output);
 });
 
@@ -269,16 +272,6 @@ router.post("/api/user-address-new", async (req, res) => {
   ])
   console.log('RS:', insertRS)
 
-  //     try {
-  //       let result;
-  //       [result] = await db.query(sql, [
-  //         req.body.addressNewData.placename,
-  //         req.body.addressNewData.recipientname,
-  //         req.body.addressNewData.postalcode,
-  //         req.body.addressNewData.address,
-  //         req.body.addressNewData.phonenumber,
-
-  //       ]);
         if (insertRS.affectedRows === 1) {
           output.success = true;
         } else {
@@ -325,7 +318,7 @@ router.post("/api/user-address-edit", async (req, res) => {
   };
 
   console.log('req.body',req.body)
-  // console.log("body:" + req.body.memInfo.mem_nickname);
+ 
 
   const sql =
     `UPDATE user_shipping_address SET 
@@ -351,6 +344,25 @@ router.post("/api/user-address-edit", async (req, res) => {
   output.result = result;
   res.json(output);
 });
+
+//刪除地址
+router.post("/api/user-address-delete", async (req, res) => {
+  const output = {
+    success: false,
+    error: "",
+  };
+  console.log(req.body);
+  const sql = `DELETE FROM user_shipping_address WHERE sid=? AND user_id = ?`
+
+  const [deleteRS] = await db.query(sql, [
+    req.body.sid,
+    req.body.user_id,
+  ])
+
+  output.success = !!deleteRS.affectedRows
+
+  res.json(output)
+})
 
 
 
