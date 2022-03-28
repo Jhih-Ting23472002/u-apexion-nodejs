@@ -1,3 +1,4 @@
+const { default: axios } = require("axios");
 const express = require("express");
 const db = require("../modules/connect-db");
 const router = express.Router();
@@ -37,7 +38,7 @@ async function getAllMen(req, res) {
   const totalRows = `SELECT COUNT(1) FROM product WHERE category ='Men' `;
   const [allMentotalRows] = await db.query(totalRows);
   const allRows = allMentotalRows[0];
-  const output = {allMen, allRows };
+  const output = { allMen, allRows };
   return output;
 }
 async function getAllWoman(req, res) {
@@ -47,7 +48,7 @@ async function getAllWoman(req, res) {
   const totalRows = `SELECT COUNT(1) FROM product WHERE category ='Woman' `;
   const [allMentotalRows] = await db.query(totalRows);
   const allRows = allMentotalRows[0];
-  const output = {allWoman, allRows };
+  const output = { allWoman, allRows };
   return output;
 }
 async function getAllShoes(req, res) {
@@ -57,9 +58,15 @@ async function getAllShoes(req, res) {
   const totalRows = `SELECT COUNT(1) FROM product WHERE category ='Shoes' `;
   const [allMentotalRows] = await db.query(totalRows);
   const allRows = allMentotalRows[0];
-  const output = {allShoes, allRows };
+  const output = { allShoes, allRows };
   return output;
 }
+
+async function getAllShoes(req, res) {
+  const response = await fetch("https://tw.rter.info/capi.php");
+  const [DailyForeignExchangeRates] = await response.json();
+}
+
 //--------------------------------------------------------------------------------------
 router.get("/api/getProduct-New", async (req, res) => {
   res.json(await getProductNew(req, res));
@@ -88,6 +95,12 @@ router.get("/api/getAllWoman", async (req, res) => {
 });
 router.get("/api/getAllShoes", async (req, res) => {
   res.json(await getAllShoes(req, res));
+});
+//每日匯率api
+router.get("/api/DailyForeignExchangeRates", async (req, res) => {
+  
+  const response = await axios.get("https://tw.rter.info/capi.php")
+  res.json(response.data)
 });
 
 module.exports = router;
