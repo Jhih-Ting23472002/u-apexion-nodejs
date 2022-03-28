@@ -90,6 +90,9 @@ app.use('/travel-notes',require('./routes/travel-notes'))
 //會員頁
 app.use('/user',require('./routes/user'))
 
+//購物車
+app.use('/cart',require('./routes/cart'))
+
 
 
 // ********** 所有路由的後面
