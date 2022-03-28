@@ -353,7 +353,14 @@ router.post("/api/user-address-edit", async (req, res) => {
 });
 
 
-
-
+//拿取所有user表單資料
+async function getUser(req, res) {
+  const sql = `SELECT * FROM user`;
+  const [rs5] = await db.query(sql);
+  return rs5;
+}
+router.get("/api/getuser", async (req, res) => {
+  res.json(await getUser(req, res));
+});
 
 module.exports = router;
