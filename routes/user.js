@@ -3,6 +3,17 @@ const db = require("./../modules/connect-db");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const saltRounds = 10;
+const nodemailer = require("nodemailer");
+
+//驗證信發送設定
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  auth: {
+    user: "uuuuuuuapexion@gmail.com",
+    pass: "ydhublwsjatzfznn",
+  },
+});
 
 //登入檢查
 router.post("/api/auth-list", async (req, res) => {
@@ -19,6 +30,7 @@ router.post("/api/auth-list", async (req, res) => {
   const [rs] = await db.query("SELECT * FROM user WHERE account=?", [
     req.body.account,
   ]);
+  
 
   if (!rs.length) {
     output.error = "帳號密碼錯誤";
@@ -38,6 +50,113 @@ router.post("/api/auth-list", async (req, res) => {
   output.success = true;
   output.info = { sid, account };
   // output.token = jwt.sign({ mem_id, mem_account }, process.env.JWT_KEY);
+  res.json(output);
+});
+
+//忘記密碼頁郵件驗證
+router.post("/api/accountAndMobileCheck", async (req, res) => {
+  const output = {
+    success: false,
+    error: "",
+    info: "",
+    code: 0,
+  };
+  // console.log("account:" + req.body.mem_account)
+  //檢查是否獲得資料
+ 
+  const [rs] = await db.query("SELECT * FROM user WHERE account=? AND mobile=? ", [
+    req.body.account,
+    req.body.mobile,
+  ]);
+   
+   
+
+
+  if (!rs.length) {
+    //驗證失敗
+    output.error  = "此用戶不存在";
+    output.code   = 403;
+    return res.json(output);
+  } else{
+    //驗證成功.發信
+    const row = rs[0];
+    //console.log(rs[0]);
+    
+    const { sid, account } = row;
+    output.success = true;
+    output.info = { sid, account };
+    
+    const ranSixNum = () => {
+      let code = "";
+      for (let i = 0; i < 6; i++) {
+        code += parseInt(Math.random() * 10);
+      }
+      return code;
+    }; // 隨機生成6位數
+
+    //發送驗證信
+    const email = req.body.account;
+    let verify_code = ranSixNum();
+     
+    transporter
+      .sendMail({
+        from: '"U-APEXION 宇頂科技-宇你至頂" <uuuuuuuapexion@gmail.com>', // 發信人
+        to: email, //收信人
+        subject: "宇頂科技密碼修改驗證信",
+        html: `
+        <p>修改您的密碼!</p>
+        <p>您正在修改 U-APEXION 宇頂科技 的會員密碼</p> 
+        <p>請您輸入以下驗證碼: <strong style="color: #841d29;">${verify_code}</strong></p>`,
+      })
+      .then((info) => {
+        console.log({ info });
+      })
+      .catch(console.error);
+
+    //output.success = true;
+    //output.verify_code = verify_code;
+    
+    //res.json(output);
+
+    output.error  = "驗證成功，請您至信箱收取驗證碼。";
+    output.code   = 200;
+    
+    return res.json(output); 
+  } 
+
+});
+
+//忘記密碼頁驗證碼認證
+router.post("/api/revise-pwd-vcode", async (req, res) => {
+  const output = {
+    success: false,
+    errorMessage: "",
+  };
+  const memInpVcode = parseInt(req.body.validCode);
+  const verify_code = parseInt(req.body.verify_code);
+
+  if (memInpVcode === verify_code) {
+    output.success = true;
+  } else {
+    output.errorMessage = "驗證碼輸入錯誤";
+  }
+  res.json(output);
+});
+
+//忘記密碼頁修改密碼
+router.post("/api/reset-pwd", async (req, res) => {
+  const output = {
+    success: false,
+    errorMessage: "",
+  };
+  const hash = await bcrypt.hash(req.body.newPassword, saltRounds);
+  const sql = "UPDATE `mem` SET `mem_pwd`=? WHERE mem_id=?";
+
+  const [result] = await db.query(sql, [hash, req.body.mem_id]);
+
+  console.log(result);
+  output.success = !!result.affectedRows;
+  output.result = result;
   res.json(output);
 });
 
@@ -173,6 +292,7 @@ router.post("/api/user-address-new", async (req, res) => {
     res.json(output);
 });
 
+//讀取地址資料
 router.get("/api/get-user-address/:user_id", async (req, res) => {
 
   console.log('req.params.user_id:', req.params.user_id)
