@@ -61,6 +61,8 @@ app.use((req, res, next)=>{
     next();
 });
 
+//行程訂票首頁
+app.use('/ticket-order',require('./routes/ticket-order'))
 
 //訂票行程選擇頁
 app.use('/ticket-trip',require('./routes/ticket-trip'))
