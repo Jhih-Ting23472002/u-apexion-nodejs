@@ -11,8 +11,8 @@ async function getSeatListData(res){
 }
 
 router.post('/api/seat-list',async(req,res)=>{
-    console.log('123');
-    console.log(req.body);
+    // console.log('123');
+    // console.log(req.body);
     res.json(await getSeatListData(req.body))
 })
 

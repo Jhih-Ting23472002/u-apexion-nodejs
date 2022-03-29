@@ -375,4 +375,93 @@ router.get("/api/getuser", async (req, res) => {
   res.json(await getUser(req, res));
 });
 
+//tina 訂票首頁驗證信發送
+router.post("/api/ticket-order-checkmail", async (req, res) => {
+  const output = {
+    success: false,
+    error: "",
+    info: "",
+    code: 0,
+  };
+  // console.log("account:" + req.body.mem_account)
+  //檢查是否獲得資料
+ 
+  const [rs] = await db.query("SELECT * FROM user WHERE account=? AND mobile=? ", [
+    req.body.account,
+    req.body.mobile,
+  ]);
+   
+   
+
+
+  if (!rs.length) {
+    //驗證失敗
+    output.error  = "此用戶不存在";
+    output.code   = 403;
+    return res.json(output);
+  } else{
+    //驗證成功.發信
+    // const row = rs[0];
+    //console.log(rs[0]);
+    
+    // const { sid, account } = row;
+    // output.success = true;
+    // output.info = { sid, account };
+    
+    const ranSixNum = () => {
+      let code = "";
+      for (let i = 0; i < 6; i++) {
+        code += parseInt(Math.random() * 10);
+      }
+      return code;
+    }; // 隨機生成6位數
+
+    //發送驗證信
+    const email = req.body.account;
+    let verify_code = ranSixNum();
+     
+    transporter
+      .sendMail({
+        from: '"U-APEXION 宇頂科技-宇你至頂" <uuuuuuuapexion@gmail.com>', // 發信人
+        to: email, //收信人
+        subject: "資格審核通過驗證信",
+        html: `
+        <p>恭喜您資格審核通過</p>
+        <p>請您輸入以下驗證碼: <strong style="color: #841d29;">${verify_code}</strong></p>
+        <p>***此驗證碼五分鐘內有效***</p>`,
+      })
+      .then((info) => {
+        console.log({ info });
+      })
+      .catch(console.error);
+
+    output.success = true;
+    output.verify_code = verify_code;
+    
+
+    output.message  = "資格審核成功，請您至信箱收取驗證碼。";
+    output.code   = 200;
+    
+    return res.json(output); 
+  } 
+
+});
+
+//tina 訂票首頁驗證通過
+router.post("/api/ticket-order-checkOk", async (req, res) => {
+  const output = {
+    success: false,
+    errorMessage: "",
+  };
+  const memInpVcode = parseInt(req.body.validCode);
+  const verify_code = parseInt(req.body.verify_code);
+
+  if (memInpVcode === verify_code) {
+    output.success = true;
+  } else {
+    output.errorMessage = "驗證碼輸入錯誤";
+  }
+  res.json(output);
+});
+
 module.exports = router;
