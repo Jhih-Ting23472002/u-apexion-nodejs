@@ -386,9 +386,8 @@ router.post("/api/ticket-order-checkmail", async (req, res) => {
   // console.log("account:" + req.body.mem_account)
   //檢查是否獲得資料
  
-  const [rs] = await db.query("SELECT * FROM user WHERE account=? AND mobile=? ", [
+  const [rs] = await db.query("SELECT * FROM user WHERE account=?", [
     req.body.account,
-    req.body.mobile,
   ]);
    
    
