@@ -46,9 +46,9 @@ router.post("/api/auth-list", async (req, res) => {
     return res.json(output);
   }
 
-  const { sid, account } = row;
+  const { sid, account, name } = row;
   output.success = true;
-  output.info = { sid, account };
+  output.info = { sid, account ,name };
   // output.token = jwt.sign({ mem_id, mem_account }, process.env.JWT_KEY);
   res.json(output);
 });

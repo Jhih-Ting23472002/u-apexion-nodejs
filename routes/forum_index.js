@@ -122,6 +122,8 @@ router.get('/list-delete/:sid',async (req, res)=>{
 
 // 留言
 router.post('/res-list/:res_art_sid',async (req, res)=>{
+    const res_id = req.body.res_user
+    console.log(res_id)
     const artSid = req.params.res_art_sid
     var res_content = req.body.res_content
     // console.log('artSid',artSid);
@@ -129,13 +131,25 @@ router.post('/res-list/:res_art_sid',async (req, res)=>{
     const sql1 = "INSERT INTO `forum_response`(`user_sid`, `res_art_sid`, `res_content`, `res_time`) VALUES (?,?,?, NOW())"
     const sql2 = "UPDATE `forum_article` SET `article_comments`=(SELECT COUNT(1) FROM `forum_response` WHERE `res_art_sid`=?) WHERE forum_sid=?"
     const [rs1] = await db.query(sql1,[
-        3,
+        res_id,
         artSid,
         res_content,
     ])
     const [rs2] = await db.query(sql2,[
         artSid,
         artSid,
+    ])
+})
+// 按讚數更新到資料庫
+router.post('/likes-update',async (req, res) => {
+    const art_likes = req.body.art_likes;
+    const art_id = req.body.art_id;
+    console.log(art_likes);
+    console.log(req.body.art_sid)
+    const sql = "UPDATE `forum_article` SET `article_likes`='?' WHERE forum_sid = ?"
+    const [rs] = await db.query(sql,[
+        art_likes,
+        art_id,
     ])
 })
 // 發文
@@ -145,12 +159,14 @@ router.post('/forumArticle_insert',upload.single('avatar'), async (req, res)=>{
     const art_content = req.body.art_content
     const hashtag1 = req.body.hashtagone
     const hashtag2 = req.body.hashtagtwo
-    console.log('art_category_sid',art_category_sid);
-    console.log('art_title',art_title);
+    const forum_user_sid = req.body.forum_user_sid
+    // console.log('art_category_sid',art_category_sid);
+    // console.log('art_title',art_title);
+    // console.log('forum_user_sid',forum_user_sid)
 
     const sql = "INSERT INTO `forum_article`(`forum_user_sid`, `art_category_sid`, `art_title`, `art_content`, `hashtag1`, `hashtag2`, `art_photo`,`article_likes`,`article_save`,`art_create_time`) VALUES (?,?,?,?,?,?,?,?,?,Now())"
     const [rs] = await db.query(sql,[
-       23,
+        forum_user_sid,
        art_category_sid,
        art_title,
        art_content,
@@ -179,7 +195,6 @@ router.post('/forumArticle_update/:sid',upload.single('avatar'),async (req, res)
         hashtag1,
         hashtag2,
         req.file.filename || null,
-        // null,
         req.params.sid 
     ]
     )
