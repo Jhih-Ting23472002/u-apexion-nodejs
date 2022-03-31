@@ -226,7 +226,7 @@ router.post("/api/user-revise",upload.single('avatar'), async (req, res) => {
   };
   let imgsrc = "";
 
-  console.log(req.file.filename);
+  // console.log(req.file.filename);
   // console.log("body:" + req.body.memInfo.mem_nickname);
   //var imgsrc = 'http://127.0.0.1:3000/images/' + req.file.filename
  
@@ -352,30 +352,6 @@ router.get("/api/get-user-address/:user_id", async (req, res) => {
   res.json(output);
 })
 
-//讀取歷史訂單資訊
-router.get("/api/get-order-history/:user_id", async (req, res) => {
-
-  console.log('req.params.user_id:', req.params.user_id)
-
-  const output = {
-    success: false,
-    error: "",
-    list:'',
-  };
-  const user_id = req.params.user_id
-  const sql = `SELECT * FROM user_order_history WHERE user_id = ${user_id}`;
-  const [orderhistoryRS] = await db.query(sql)
-  console.log('orderhistoryRS:', orderhistoryRS)
-
-  if(orderhistoryRS.length){
-    output.success=true;
-    output.list = orderhistoryRS;
-  } else{
-    output.error = '沒有任何資料'
-  }
-
-  res.json(output);
-})
 
 //地址修改
 router.post("/api/user-address-edit", async (req, res) => {
@@ -431,6 +407,30 @@ router.post("/api/user-address-delete", async (req, res) => {
   res.json(output)
 })
 
+//讀取歷史訂單資訊
+router.get("/api/get-order-history/:user_id", async (req, res) => {
+
+  console.log('req.params.user_id:', req.params.user_id)
+
+  const output = {
+    success: false,
+    error: "",
+    list:'',
+  };
+  const user_id = req.params.user_id
+  const sql = `SELECT * FROM user_order_history WHERE user_id = ${user_id}`;
+  const [orderhistoryRS] = await db.query(sql)
+  console.log('orderhistoryRS:', orderhistoryRS)
+
+  if(orderhistoryRS.length){
+    output.success=true;
+    output.list = orderhistoryRS;
+  } else{
+    output.error = '沒有任何資料'
+  }
+
+  res.json(output);
+})
 
 //拿取所有user表單資料
 async function getUser(req, res) {
@@ -441,6 +441,8 @@ async function getUser(req, res) {
 router.get("/api/getuser", async (req, res) => {
   res.json(await getUser(req, res));
 });
+
+
 
 //tina 訂票首頁驗證信發送
 router.post("/api/ticket-order-checkmail", async (req, res) => {
