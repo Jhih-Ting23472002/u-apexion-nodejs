@@ -5,9 +5,10 @@ const router = express.Router();
 router.post('/order-list-post',async(req,res)=>{
     const orderListNumber = req.body.orderListNumber
     const userId = req.body.userId
-    const productJTing = req.body.productJTing
-    const productJTingQuantity = req.body.productJTingQuantity
-    const productJTingPrice = req.body.productJTingPrice
+    const productJTingTina = req.body.productJTingTina
+    const productJTingTinaQuantity = req.body.productJTingTinaQuantity
+    const productJTingTinaPrice = req.body.productJTingTinaPrice
+    console.log(productJTingTina) // 檢查
 
 
     console.log('order-num',orderListNumber)
@@ -15,9 +16,9 @@ router.post('/order-list-post',async(req,res)=>{
     const [rs] = await db.query(sql,[
         orderListNumber,
         userId,
-        JSON.stringify(productJTing), // 學了半年『 JSON.stringify 、 JSON.parse 』都不會用，我還能做什麼？？？ 0 貢獻？？？
-        JSON.stringify(productJTingQuantity),
-        JSON.stringify(productJTingPrice),
+        JSON.stringify(productJTingTina), // 『 JSON.stringify 、 JSON.parse 』？？？
+        JSON.stringify(productJTingTinaQuantity),
+        JSON.stringify(productJTingTinaPrice),
     ]);
     res.status(200).json(rs)
 })
