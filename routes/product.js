@@ -62,10 +62,10 @@ async function getAllShoes(req, res) {
   return output;
 }
 
-async function getAllShoes(req, res) {
-  const response = await fetch("https://tw.rter.info/capi.php");
-  const [DailyForeignExchangeRates] = await response.json();
-}
+// async function getAllRates(req, res) {
+//   const response = await fetch("https://tw.rter.info/capi.php");
+//   const [DailyForeignExchangeRates] = await response.json();
+// }
 
 //--------------------------------------------------------------------------------------
 router.get("/api/getProduct-New", async (req, res) => {

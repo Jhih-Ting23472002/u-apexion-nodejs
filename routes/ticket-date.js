@@ -9,7 +9,7 @@ async function getDateListData(month){
     // const sqldate = `SELECT DATE_FORMAT(departure_date, '%Y-%m-%d') FROM ticket_date WHERE trip_month = ${parseInt(month)+1}`;
     const[rsDate] = await db.query(sqldate);
     const[rsSeat] = await db.query(sqlseat);
-    // const[rs2] = await db.query(sqldate);
+    const[rs2] = await db.query(sqldate);
     
     return [rsDate,rsSeat];
 }
