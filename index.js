@@ -83,6 +83,7 @@ app.use('/travel-index',require('./routes/travel-index'))
 app.use('/travel-choose',require('./routes/travel-choose'))
 app.use('/travel-choose-pmf',require('./routes/travel-choose-pmf'))
 app.use('/travel-choose-dmf',require('./routes/travel-choose-dmf'))
+app.use('/travel-index-search',require('./routes/travel-index-search'))
 
 //行程詳細頁
 app.use('/travel-notes',require('./routes/travel-notes'))
