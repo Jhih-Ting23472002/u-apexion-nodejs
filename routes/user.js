@@ -54,9 +54,9 @@ router.post("/api/auth-list", async (req, res) => {
     return res.json(output);
   }
 
-  const { sid, account, name ,imgs} = row;
+  const { sid, account, name ,imgs, avatar} = row;
   output.success = true;
-  output.info = { sid, account ,name ,imgs};
+  output.info = { sid, account ,name ,imgs, avatar};
   // output.token = jwt.sign({ mem_id, mem_account }, process.env.JWT_KEY);
   return res.json(output);
 });
@@ -181,7 +181,7 @@ router.post("/api/user-register", async (req, res) => {
 
   const hash = await bcrypt.hash(req.body.registerData.password, saltRounds);
   const sql =
-    "INSERT INTO `user`(`name`, `account`, `password`, `gender`, `birthday`,  `mobile`, `country`, `create_date`) VALUES (?,?,?,?,?,?,?,NOW())";
+    "INSERT INTO `user`(`name`, `account`, `password`, `gender`, `birthday`,  `mobile`, `country`,`avatar`, `create_date`) VALUES (?,?,?,?,?,?,?,?,NOW())";
 
   try {
     let result;
@@ -193,6 +193,7 @@ router.post("/api/user-register", async (req, res) => {
       req.body.registerData.birthday,
       req.body.registerData.mobile,
       req.body.registerData.country,
+      'bdeb89f5-bcd8-4261-b721-3ec0ce4889db.jpg'
     ]);
     if (result.affectedRows === 1) {
       output.success = true;
