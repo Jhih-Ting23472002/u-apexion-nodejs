@@ -160,6 +160,9 @@ router.post('/forumArticle_insert',upload.single('avatar'), async (req, res)=>{
     const hashtag1 = req.body.hashtagone
     const hashtag2 = req.body.hashtagtwo
     const forum_user_sid = req.body.forum_user_sid
+    const output = {
+        success: false,
+    }
     // console.log('art_category_sid',art_category_sid);
     // console.log('art_title',art_title);
     // console.log('forum_user_sid',forum_user_sid)
@@ -176,6 +179,8 @@ router.post('/forumArticle_insert',upload.single('avatar'), async (req, res)=>{
        0,
        0,
     ])
+    output.success=true;
+    res.json(output);
 })
 // 修改文章
 router.post('/forumArticle_update/:sid',upload.single('avatar'),async (req, res)=>{
