@@ -532,4 +532,13 @@ router.post("/api/ticket-order-checkOk", async (req, res) => {
   res.json(output);
 });
 
+//歷史訂單
+
+router.post('/api/history-order',async(req, res) => {
+  console.log(req.body.user_id)
+  const sql = "SELECT * FROM `cart` LEFT JOIN user ON `cart`.`order_user_id`=user.sid WHERE sid = ?"
+  const [rs] = await db.query(sql,[req.body.user_id]);
+  res.status(200).json(rs || null);
+})
+
 module.exports = router;
