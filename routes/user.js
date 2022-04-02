@@ -54,9 +54,9 @@ router.post("/api/auth-list", async (req, res) => {
     return res.json(output);
   }
 
-  const { sid, account, name ,imgs, avatar} = row;
+  const { sid, account, name ,imgs, avatar,passport_name} = row;
   output.success = true;
-  output.info = { sid, account ,name ,imgs, avatar};
+  output.info = { sid, account ,name ,imgs, avatar, passport_name};
   // output.token = jwt.sign({ mem_id, mem_account }, process.env.JWT_KEY);
   return res.json(output);
 });
@@ -181,7 +181,7 @@ router.post("/api/user-register", async (req, res) => {
 
   const hash = await bcrypt.hash(req.body.registerData.password, saltRounds);
   const sql =
-    "INSERT INTO `user`(`name`, `account`, `password`, `gender`, `birthday`,  `mobile`, `country`,`avatar`, `create_date`) VALUES (?,?,?,?,?,?,?,?,NOW())";
+    "INSERT INTO `user`(`name`, `account`, `password`,`passport_name`,`gender`, `birthday`,  `mobile`, `country`,`avatar`, `create_date`) VALUES (?,?,?,?,?,?,?,?,?,NOW())";
 
   try {
     let result;
@@ -189,6 +189,7 @@ router.post("/api/user-register", async (req, res) => {
       req.body.registerData.name,
       req.body.registerData.account,
       hash,
+      req.body.registerData.passport,
       req.body.registerData.gender,
       req.body.registerData.birthday,
       req.body.registerData.mobile,
