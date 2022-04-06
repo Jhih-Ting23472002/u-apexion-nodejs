@@ -21,12 +21,6 @@ async function getJourneyMann(req,res){
     return rs3;
 }
 
-async function getJourneyUap001(req,res){
-    const sql = `SELECT * FROM travel_index WHERE travel_number = 'UAP-001'`;
-    const [rs4] = await db.query(sql)
-    return rs4;
-}
-
 router.get('/api/travel-journeytitan',async(req,res)=>{
     res.json(await getJourneyTitan(req,res))
 })
@@ -37,10 +31,6 @@ router.get('/api/travel-journeyxandar',async(req,res)=>{
 
 router.get('/api/travel-journeymann',async(req,res)=>{
     res.json(await getJourneyMann(req,res))
-})
-
-router.get('/api/travel-journeyuap001',async(req,res)=>{
-    res.json(await getJourneyUap001(req,res))
 })
 
 

@@ -12,8 +12,8 @@ const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
   auth: {
-    user: "uuuuuuuapexion@gmail.com",
-    pass: "ydhublwsjatzfznn",
+    user: "uapexion@gmail.com",
+    pass: "uzefbjtzilfkqtej",
   },
 });
 
@@ -99,15 +99,15 @@ router.post("/api/accountAndMobileCheck", async (req, res) => {
       return code;
     }; // 隨機生成6位數
 
-    //發送驗證信
+    //發送驗證信  
     const email = req.body.account;
     let verify_code = ranSixNum();
      
     transporter
       .sendMail({
-        from: '"U-APEXION 宇頂科技-宇你至頂" <uuuuuuuapexion@gmail.com>', // 發信人
+        from: '"U-APEXION 宇頂科技-宇你至頂" <uapexion@gmail.com>', // 發信人
         to: email, //收信人
-        subject: "宇頂科技密碼修改驗證信",
+        subject: "宇頂科技-更改密碼驗證信",
         html: `
         <p>修改您的密碼!</p>
         <p>您正在修改 U-APEXION 宇頂科技 的會員密碼</p> 
@@ -226,15 +226,14 @@ router.post("/api/user-revise",upload.single('avatar'), async (req, res) => {
     error: "",
     user_photo:'',
   };
-  let imgsrc = "";
-
-  // console.log(req.file.filename);
+  
+  // console.log(output);
   // console.log("body:" + req.body.memInfo.mem_nickname);
   //var imgsrc = 'http://127.0.0.1:3000/images/' + req.file.filename
  
   //imgsrc = 'http://localhost:3001/img/' + req.file.filename;
-
-  imgsrc = req.file.filename;
+// let imgsrc = "";
+  // imgsrc = req.file.filename;
 
   sql = "UPDATE `user` SET `name`=?,`mobile`=?,`gender`=?,`birthday`=?,`country`=?,avatar=? WHERE sid=?";
 
@@ -244,7 +243,8 @@ router.post("/api/user-revise",upload.single('avatar'), async (req, res) => {
     req.body.gender,
     req.body.birthday,
     req.body.country,
-    imgsrc,
+    // imgsrc,
+    req.file.filename,
     req.body.sid,
   ]);
 

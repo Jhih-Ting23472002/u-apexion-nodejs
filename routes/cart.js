@@ -12,7 +12,7 @@ router.post('/order-list-post',async(req,res)=>{
 
 
     console.log('order-num',orderListNumber)
-    const sql = "INSERT INTO `cart`(`order-list-checked`, `order-user-id`,`order-product-name`, `order-quantity`, `order-product-price`, `order-created-time`) VALUES (?,?,?,?,?,Now())"
+    const sql = "INSERT INTO `cart`(`order_list_checked`, `order_user_id`,`order_product_name`, `order_quantity`, `order_product_price`, `order_created_time`) VALUES (?,?,?,?,?,Now())"
     const [rs] = await db.query(sql,[
         orderListNumber,
         userId,
