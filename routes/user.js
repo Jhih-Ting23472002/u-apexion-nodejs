@@ -235,7 +235,7 @@ router.post("/api/user-revise",upload.single('avatar'), async (req, res) => {
 // let imgsrc = "";
   // imgsrc = req.file.filename;
 
-  sql = "UPDATE `user` SET `name`=?,`mobile`=?,`gender`=?,`birthday`=?,`country`=?,avatar=? WHERE sid=?";
+  sql = "UPDATE `user` SET `name`=?,`mobile`=?,`gender`=?,`birthday`=?,`country`=?,`passport_name`=?,`avatar=? WHERE sid=?";
 
   const [result] = await db.query(sql, [
     req.body.name,
@@ -244,6 +244,7 @@ router.post("/api/user-revise",upload.single('avatar'), async (req, res) => {
     req.body.birthday,
     req.body.country,
     // imgsrc,
+    req.body.passport,
     req.file.filename,
     req.body.sid,
   ]);
@@ -255,12 +256,42 @@ router.post("/api/user-revise",upload.single('avatar'), async (req, res) => {
   res.json(output);
 });
 
+//確認舊密碼是否正確
+router.post("/api/check-old-pwd", async (req, res) => {
+  const output = {
+    success: false,
+    error: "",
+    message: "",
+  };
+  console.log('999')
+  console.log(req.body)
+  const old_psw = req.body.pswData.old
+  const user_id = req.body.pswData.user_id
+
+  // 尋找user_id對應到的舊密碼
+  const oldpsw_sql =`SELECT password FROM user WHERE sid = ${user_id}`
+  const [result] = await db.query(oldpsw_sql)
+  console.log('result:',result)
+
+  const row = result[0];
+  const compareResult = await bcrypt.compare(req.body.pswData.old, row.password);
+  if(compareResult){
+    output.message = '原始密碼正確'
+    output.code = '200'
+  }else{
+    output.error = '原始密碼不正確'
+    output.code = '410'
+  }
+  res.json(output)
+});
+
 //會員密碼更改
 router.post("/api/edit-pwd", async (req, res) => {
   const output = {
     success: false,
     error: "",
   };
+  console.log('999')
   console.log(req.body)
   const old_psw = req.body.pswData.old
   const new_psw = req.body.pswData.new
@@ -286,7 +317,6 @@ router.post("/api/edit-pwd", async (req, res) => {
   }
   res.json(output)
 });
-
 
 //新增收件地址router
 router.post("/api/user-address-new", async (req, res) => {
@@ -493,7 +523,7 @@ router.post("/api/ticket-order-checkmail", async (req, res) => {
      
     transporter
       .sendMail({
-        from: '"U-APEXION 宇頂科技-宇你至頂" <uuuuuuuapexion@gmail.com>', // 發信人
+        from: '"U-APEXION 宇頂科技-宇你至頂" <uapexion@gmail.com>', // 發信人
         to: email, //收信人
         subject: "資格審核通過驗證信",
         html: `
