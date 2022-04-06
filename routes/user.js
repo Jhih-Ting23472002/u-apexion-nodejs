@@ -352,6 +352,7 @@ router.get("/api/get-user-address/:user_id", async (req, res) => {
   }
 
   res.json(output);
+  console.log(output)
 })
 
 
@@ -410,29 +411,29 @@ router.post("/api/user-address-delete", async (req, res) => {
 })
 
 //讀取歷史訂單資訊
-router.get("/api/get-order-history/:user_id", async (req, res) => {
+// router.get("/api/get-order-history/:user_id", async (req, res) => {
 
-  console.log('req.params.user_id:', req.params.user_id)
+//   console.log('req.params.user_id:', req.params.user_id)
 
-  const output = {
-    success: false,
-    error: "",
-    list:'',
-  };
-  const user_id = req.params.user_id
-  const sql = `SELECT * FROM user_order_history WHERE user_id = ${user_id}`;
-  const [orderhistoryRS] = await db.query(sql)
-  console.log('orderhistoryRS:', orderhistoryRS)
+//   const output = {
+//     success: false,
+//     error: "",
+//     list:'',
+//   };
+//   const user_id = req.params.user_id
+//   const sql = `SELECT * FROM user_order_history WHERE user_id = ${user_id}`;
+//   const [orderhistoryRS] = await db.query(sql)
+//   console.log('orderhistoryRS:', orderhistoryRS)
 
-  if(orderhistoryRS.length){
-    output.success=true;
-    output.list = orderhistoryRS;
-  } else{
-    output.error = '沒有任何資料'
-  }
+//   if(orderhistoryRS.length){
+//     output.success=true;
+//     output.list = orderhistoryRS;
+//   } else{
+//     output.error = '沒有任何資料'
+//   }
 
-  res.json(output);
-})
+//   res.json(output);
+// })
 
 //拿取所有user表單資料
 async function getUser(req, res) {
@@ -540,7 +541,7 @@ router.post('/api/history-order',async(req, res) => {
   console.log(req.body.user_id)
   const sql = "SELECT * FROM `cart` LEFT JOIN user ON `cart`.`order_user_id`=user.sid WHERE sid = ?"
   const [rs] = await db.query(sql,[req.body.user_id]);
-  res.status(200).json(rs || null);
+  res.status(200).json(rs);
 })
 
 module.exports = router;
