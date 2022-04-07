@@ -226,6 +226,8 @@ router.post("/api/user-revise",upload.single('avatar'), async (req, res) => {
     error: "",
     user_photo:'',
   };
+  console.log(req.body.passport)
+  console.log(req.file.filename)
   
   // console.log(output);
   // console.log("body:" + req.body.memInfo.mem_nickname);
@@ -235,7 +237,7 @@ router.post("/api/user-revise",upload.single('avatar'), async (req, res) => {
 // let imgsrc = "";
   // imgsrc = req.file.filename;
 
-  sql = "UPDATE `user` SET `name`=?,`mobile`=?,`gender`=?,`birthday`=?,`country`=?,`passport_name`=?,`avatar=? WHERE sid=?";
+  sql = "UPDATE `user` SET `name`=?,`mobile`=?,`gender`=?,`birthday`=?,`country`=?,`passport_name`=?,`avatar`=? WHERE sid=?";
 
   const [result] = await db.query(sql, [
     req.body.name,
