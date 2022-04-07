@@ -10,6 +10,7 @@ const multer = require('multer');
 const upload = require(__dirname + '/modules/upload-imgs');
 const fs = require('fs').promises;
 const db = require('./modules/connect-db');
+//新增資料表在Mysql
 const sessionStore = new MysqlStore({}, db);
 const cors = require('cors');
 const fetch = require('node-fetch');
@@ -60,16 +61,45 @@ app.use((req, res, next)=>{
     next();
 });
 
+//行程訂票首頁
+app.use('/ticket-order',require('./routes/ticket-order'))
 
-app.get('/', async (req, res)=>{
-    const sql = `SELECT * FROM product`;
-    const [rs] = await db.query(sql);
-    res.json(rs);
-});
+//訂票行程選擇頁
+app.use('/ticket-trip',require('./routes/ticket-trip'))
+
+//訂票日期選擇頁
+app.use('/ticket-date',require('./routes/ticket-date'))
+
+//訂票座位選擇頁
+app.use('/ticket-seat',require('./routes/ticket-seat'))
+
+//周邊商品頁
+app.use('/product',require('./routes/product'))
+
+//行程首頁
+app.use('/travel-index',require('./routes/travel-index'))
+
+//全行程選擇頁
+app.use('/travel-choose',require('./routes/travel-choose'))
+app.use('/travel-choose-pmf',require('./routes/travel-choose-pmf'))
+app.use('/travel-choose-dmf',require('./routes/travel-choose-dmf'))
+app.use('/travel-index-search',require('./routes/travel-index-search'))
+
+//行程詳細頁
+app.use('/travel-notes',require('./routes/travel-notes'))
+
+//會員頁
+app.use('/user',require('./routes/user'))
+
+//購物車
+app.use('/cart',require('./routes/cart'))
+
+// 論壇
+app.use('/forum_index',require('./routes/forum_index'));
 
 
 // ********** 所有路由的後面
-app.use( (req, res)=>{
+app.use( (req,res)=>{
     res.status(404).send(`<h2>走錯路了</h2>`);
 });
 

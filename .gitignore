@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 .vscode
 node_modules
 package-lock.json
 package.json
+=======
+node_modules
+package-lock.json
+product_img
+img
+>>>>>>> 8eddd27d3e660f41909c3790bfa8f5a4f75761e9
