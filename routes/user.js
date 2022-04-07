@@ -259,33 +259,33 @@ router.post("/api/user-revise",upload.single('avatar'), async (req, res) => {
 });
 
 //確認舊密碼是否正確
-router.post("/api/check-old-pwd", async (req, res) => {
-  const output = {
-    success: false,
-    error: "",
-    message: "",
-  };
-  console.log('999')
-  console.log(req.body)
-  const old_psw = req.body.pswData.old
-  const user_id = req.body.pswData.user_id
+// router.post("/api/check-old-pwd", async (req, res) => {
+//   const output = {
+//     success: false,
+//     error: "",
+//     message: "",
+//   };
+//   console.log('999')
+//   console.log(req.body)
+//   const old_psw = req.body.pswData.old
+//   const user_id = req.body.pswData.user_id
 
-  // 尋找user_id對應到的舊密碼
-  const oldpsw_sql =`SELECT password FROM user WHERE sid = ${user_id}`
-  const [result] = await db.query(oldpsw_sql)
-  console.log('result:',result)
+//   // 尋找user_id對應到的舊密碼
+//   const oldpsw_sql =`SELECT password FROM user WHERE sid = ${user_id}`
+//   const [result] = await db.query(oldpsw_sql)
+//   console.log('result:',result)
 
-  const row = result[0];
-  const compareResult = await bcrypt.compare(req.body.pswData.old, row.password);
-  if(compareResult){
-    output.message = '原始密碼正確'
-    output.code = '200'
-  }else{
-    output.error = '原始密碼不正確'
-    output.code = '410'
-  }
-  res.json(output)
-});
+//   const row = result[0];
+//   const compareResult = await bcrypt.compare(req.body.pswData.old, row.password);
+//   if(compareResult){
+//     output.message = '原始密碼正確'
+//     output.code = '200'
+//   }else{
+//     output.error = '原始密碼不正確'
+//     output.code = '410'
+//   }
+//   res.json(output)
+// });
 
 //會員密碼更改
 router.post("/api/edit-pwd", async (req, res) => {
